@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .body-occlusion
+    .content
+      .form-item
+        .form-item-tit 接口地址：
+        input.form-item-input(type="text" placeholder="url")
+      .form-item
+        .form-item-tit 请求方式：
+        .form-type-con
+          .form-check-item.active(data-type="POST") POST
+          .form-check-item(data-type="GET") GET
+          .form-check-item(data-type="PUT") PUT
+          .form-check-item(data-type="Delete") Delete
+          .form-check-item(data-type="HEAD") HEAD
+      .form-item
+        .form-item-tit 请求参数：
+        .form-data-con
+          .data-item(style="border: none;")
+            .peo-data-item.add +
+            .clear
+          #data-item-box
+      .form-item(style="border: none;")
+        .btn-request 发起请求
+      .form-item(style="border-top: 1px solid #999;")
+        .form-item-tit 返回结果：
