@@ -9,12 +9,28 @@ const logger = require('koa-logger')
 const index = require('./routes/index')
 const users = require('./routes/users')
 
+const cors = require('koa2-cors')
+
+const jwtKoa = require('koa-jwt')
+
 // error handler
 onerror(app)
 
+// cors
+app.use(cors({
+  origin: function (ctx) {
+    return 'http://localhost:8080';
+  },
+  exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+  maxAge: 5,
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'DELETE'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}))
+
 // middlewares
 app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
+  enableTypes: ['json', 'form', 'text']
 }))
 app.use(json())
 app.use(logger())
@@ -22,6 +38,13 @@ app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
+}))
+
+//  JWT : json web token
+app.use(jwtKoa({
+  secret: 'my_token'
+}).unless({
+  path: ['/', /^\/user\/login/, /^\/user\/reg/]
 }))
 
 // logger

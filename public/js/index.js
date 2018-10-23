@@ -2,6 +2,17 @@ $(function () {
   
 })
 
+var bgArr = ['/img/bg.jpg', '/img/bg2.jpg'];
+var nowBgIndex = 0;
+
+// 切换背景
+$(document).on('click', '.btn-checkbg', function () {
+  if (nowBgIndex + 1 >=  bgArr.length) {
+    nowBgIndex = -1;
+  }
+  $('.content-body').css('backgroundImage', 'url(' + bgArr[++nowBgIndex] + ')');
+})
+
 $(document).on('click', '.form-check-item', function () {
   $('.form-check-item').removeClass('active');
   $(this).addClass('active');
