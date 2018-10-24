@@ -21,23 +21,23 @@ router.post('/reg', async (ctx, next) => {
     account,
     password,
     nickname
-  } = ctx.request.body;
-  let response = initRes();
-  let isExistence = false;
+  } = ctx.request.body,
+    response = initRes(),
+    isExistence = false
   await userLib.checkUser(account).then(res => {
     if (res[0].count > 0) {
-      isExistence = true;
-      response.code = -100;
-      response.message = '账号已存在';
+      isExistence = true
+      response.code = -100
+      response.message = '账号已存在'
     }
   }).catch(err => {
-    errRes(response, -200, '检查用户账号是否存在时出现错误', err);
-  });
+    errRes(response, -200, '检查用户账号是否存在时出现错误', err)
+  })
   if (!isExistence) {
     await userLib.addUser(account, password, nickname).then((res) => {
-      response.message = '注册成功';
+      response.message = '注册成功'
     }).catch(err => {
-      errRes(response, -200, '注册用户时出现错误', err);
+      errRes(response, -200, '注册用户时出现错误', err)
     })
   }
   ctx.body = response
@@ -48,11 +48,11 @@ router.post('/login', async (ctx, body) => {
   let {
     account,
     password
-  } = ctx.request.body;
-  let response = initRes();
+  } = ctx.request.body,
+    response = initRes()
   await userLib.checkUser(account, password).then(res => {
     if (res.length > 0) {
-      response.message = '登录成功';
+      response.message = '登录成功'
       let userToken = {
         uid: res[0].id,
         account: res[0].account
@@ -60,24 +60,58 @@ router.post('/login', async (ctx, body) => {
       const token = jwt.sign(userToken, 'my_token', {
         expiresIn: '2h'
       })
-      response.token = token;
+      response.token = token
     } else {
-      response.code = -100;
-      response.message = '账号或密码错误';
+      response.code = -100
+      response.message = '账号或密码错误'
     }
   }).catch(err => {
-    errRes(response, -200, '检查用户账号信息时出现错误', err);
-  });
+    errRes(response, -200, '检查用户账号信息时出现错误', err)
+  })
   ctx.body = response
 })
 
 // 获取用户列表
 router.get('/list', checkToken, async (ctx, next) => {
-  let response = initRes();
+  let response = initRes()
   await userLib.getUserList().then(res => {
-    response.data = res;
+    response.data = res
   }).catch(err => {
-    errRes(response, -200, '获取用户列表时出现错误', err);
+    errRes(response, -200, '获取用户列表时出现错误', err)
+  })
+  ctx.body = response
+})
+
+// 获取自己的信息
+router.get('/myinfo', checkToken, async (ctx, next) => {
+  let {
+    uid
+  } = ctx.request.body,
+    response = initRes()
+  await userLib.getUserInfoById(uid).then(res => {
+    delete res[0].password
+    response.data = res
+  }).catch(err => {
+    errRes(response, -200, '获取用户信息时出现错误', err)
+  })
+  ctx.body = response
+})
+
+// 更新自己的信息
+router.post('/updateMyInfo', checkToken, async (ctx, next) => {
+  let {
+    nickname,
+    birthday,
+    phone,
+    sex,
+    address,
+    uid
+  } = ctx.request.body,
+    response = initRes()
+  await userLib.updateUserInfoById(nickname, birthday, phone, sex, address, uid).then(res => {
+    response.message = '修改信息成功'
+  }).catch(err => {
+    errRes(response, -200, '更新用户信息时出现错误', err)
   })
   ctx.body = response
 })

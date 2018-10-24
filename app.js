@@ -19,7 +19,7 @@ onerror(app)
 // cors
 app.use(cors({
   origin: function (ctx) {
-    return 'http://localhost:8080';
+    return 'http://localhost:8080'
   },
   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
   maxAge: 5,
@@ -62,6 +62,6 @@ app.use(users.routes(), users.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
-});
+})
 
 module.exports = app
