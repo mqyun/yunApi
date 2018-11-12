@@ -8,11 +8,10 @@
 // 数据库连接配置
 let config = {
   connectionLimit: 50,
-  // host: '192.168.0.106',
-  host: '127.0.0.1',
+  host: '120.79.235.152',
   user: 'root',
-  password: '',
-  database: 'yun',
+  password: 'ms686996',
+  database: 'mqyun',
   port: 3306,
   multipleStatements: true
 }
